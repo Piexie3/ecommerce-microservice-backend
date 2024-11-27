@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      username: Piexie
+      password: Piexie3
+      host: localhost
+      port: 27017
+      database: users
+      authentication-database: admin
+server:
+  port: 8090
+
+
