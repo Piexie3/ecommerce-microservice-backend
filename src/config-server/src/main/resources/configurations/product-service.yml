@@ -1,25 +1,19 @@
 spring:
   config:
     import: "classpath:keys.properties"
-  database:
+  datasource:
     url: ${db.url}
     username: ${db.username}
     password: ${db.password}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-  flyway:
-    baseline-on-migrate: true
-    enabled: true
-    baseline-description: "initial"
-    baseline-version: 0
-    user: ${db.username}
-    password: ${db.password}
-
-
 server:
   port: 8050
