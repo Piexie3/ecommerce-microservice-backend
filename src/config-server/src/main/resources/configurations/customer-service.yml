@@ -1,12 +1,9 @@
 spring:
+  config:
+    import: "classpath:keys.properties"
   data:
     mongodb:
-      username: Piexie
-      password: Piexie3
-      host: localhost
-      port: 27017
-      database: users
-      authentication-database: admin
+      uri: ${mongo.url}
 server:
   port: 8090
 
