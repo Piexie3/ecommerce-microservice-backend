@@ -1,0 +1,28 @@
+spring:
+  config:
+    import: "classpath:keys.properties"
+  datasource:
+    url: ${db.url.orders}
+    username: ${db.username}
+    password: ${db.password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 8070
+
+api:
+  prefix: /api/v1
+
+application:
+  config: #porrt 8111 is for our api gateway
+    user-url: http://localhost:8111/api/v1/users
+    product-url: http://localhost:8111/api/v1/products
+    payments-url: http://localhost:8111/api/v1/payments

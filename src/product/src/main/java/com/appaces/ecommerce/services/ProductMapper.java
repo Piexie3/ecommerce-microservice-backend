@@ -2,8 +2,10 @@ package com.appaces.ecommerce.services;
 
 import com.appaces.ecommerce.dto.ProductRequest;
 import com.appaces.ecommerce.dto.ProductResponse;
+import com.appaces.ecommerce.dto.PurchaseResponse;
 import com.appaces.ecommerce.models.Category;
 import com.appaces.ecommerce.models.Product;
+import jakarta.validation.constraints.NotNull;
 
 public class ProductMapper {
     public Product toProduct(ProductRequest request) {
@@ -18,13 +20,16 @@ public class ProductMapper {
     }
 
     public ProductResponse toProductResponse(Product product) {
-        return new ProductResponse(
+        return null;
+    }
+
+    public PurchaseResponse toProductPurchaseResponse(Product product, @NotNull(message = "Quantity is mandatory") double quantity) {
+        return new PurchaseResponse(
+                product.getId(),
                 product.getName(),
                 product.getDescription(),
-                product.getInventory(),
                 product.getPrice(),
-                product.getCategory().getId(),
-                product.getCategory().getName()
+                quantity
         );
     }
 }

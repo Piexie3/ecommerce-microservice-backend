@@ -1,4 +1,4 @@
-package com.appaces.ecommerce.cotrollers;
+package com.appaces.ecommerce.controllers;
 
 import com.appaces.ecommerce.dto.ProductRequest;
 import com.appaces.ecommerce.dto.ProductResponse;

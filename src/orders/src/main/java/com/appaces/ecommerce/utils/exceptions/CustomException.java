@@ -1,4 +1,4 @@
-package com.appaces.ecommerce.utils;
+package com.appaces.ecommerce.utils.exceptions;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -18,7 +18,7 @@ public class Product {
 
     private String name;
     private String description;
-    private int inventory;
+    private double inventory;
     private BigDecimal price;
 
     @ManyToOne(cascade = CascadeType.ALL)

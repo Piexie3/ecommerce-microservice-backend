@@ -3,7 +3,7 @@ spring:
     import: "classpath:keys.properties"
   data:
     mongodb:
-      uri: ${mongo.url}
+      uri: mongodb://localhost:27017/users?authSource=admin
 server:
   port: 8090
 

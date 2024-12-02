@@ -3,10 +3,12 @@ package com.appaces.ecommerce.services;
 import com.appaces.ecommerce.dto.*;
 import com.appaces.ecommerce.models.Product;
 import com.appaces.ecommerce.repository.ProductRepository;
-import com.appaces.ecommerce.utils.CustomException;
+import com.appaces.ecommerce.utils.exceptions.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +25,30 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<PurchaseResponse> purchaseProduct(List<PurchaseRequest> request) {
-        return List.of();
+        var productIds = request.stream()
+                .map(PurchaseRequest::productId)
+                .toList();
+        var products = repository.findAllIdInOrderById(productIds);
+        if (productIds.size() != products.size()){
+            throw new CustomException("One or more products doesn't exists");
+        }
+        var storeRequest = request
+                .stream()
+                .sorted(Comparator.comparing(PurchaseRequest::productId))
+                .toList();
+        var purchasedProducts = new ArrayList<PurchaseResponse>();
+        for(int i = 0;i<storeRequest.size();i++){
+            var product = products.get(i);
+            var productRequest= storeRequest.get(i);
+            if (product.getInventory()<productRequest.quantity()){
+                throw new CustomException("Oops, We have Insufficient quantity in stock. Try again later");
+            }
+            var newAvailableQuantity = product.getInventory() - productRequest.quantity();
+            product.setInventory(newAvailableQuantity);
+            repository.save(product);
+            purchasedProducts.add(mapper.toProductPurchaseResponse(product,productRequest.quantity()));
+        }
+        return purchasedProducts;
     }
 
     @Override
