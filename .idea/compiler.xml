@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="config-server" />
         <module name="product" />
+        <module name="orders" />
         <module name="user" />
         <module name="discovery" />
       </profile>
@@ -21,6 +22,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="config-server" options="-parameters" />
       <module name="discovery" options="-parameters" />
+      <module name="orders" options="-parameters" />
       <module name="product" options="-parameters" />
       <module name="product-service" options="-parameters" />
       <module name="user" options="-parameters" />
