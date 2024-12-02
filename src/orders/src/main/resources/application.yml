@@ -1,0 +1,6 @@
+spring:
+  config:
+    optional: optional:configserver:http://localhost:8888
+  application:
+    name: orders-service
+
