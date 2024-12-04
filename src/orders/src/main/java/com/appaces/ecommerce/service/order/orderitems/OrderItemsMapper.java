@@ -1,5 +1,6 @@
 package com.appaces.ecommerce.service.order.orderitems;
 
+import com.appaces.ecommerce.dto.OrderItemResponse;
 import com.appaces.ecommerce.dto.OrderItemsRequests;
 import com.appaces.ecommerce.models.Order;
 import com.appaces.ecommerce.models.OrderItems;
@@ -17,5 +18,12 @@ public class OrderItemsMapper {
                  )
                 .productId(requests.productId())
                 .build();
+    }
+
+    public OrderItemResponse toOrderItemResponse(OrderItems orderItems) {
+        return new OrderItemResponse(
+                orderItems.getId(),
+                orderItems.getQuantity()
+        );
     }
 }

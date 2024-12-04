@@ -1,16 +1,18 @@
 package com.appaces.ecommerce.service.order;
 
-import com.appaces.ecommerce.dto.OrderItemsRequests;
-import com.appaces.ecommerce.dto.OrderRequest;
-import com.appaces.ecommerce.dto.PurchaseRequest;
+import com.appaces.ecommerce.dto.*;
 import com.appaces.ecommerce.models.OrderMapper;
 import com.appaces.ecommerce.repository.OrderRepository;
+import com.appaces.ecommerce.service.kafka.OrderProducer;
 import com.appaces.ecommerce.service.order.orderitems.OrderItemsService;
 import com.appaces.ecommerce.service.product.ProductClient;
 import com.appaces.ecommerce.service.user.UserClient;
 import com.appaces.ecommerce.utils.exceptions.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper mapper;
     private final OrderItemsService itemsService;
+    private final OrderProducer orderProducer;
 
     @Override
     public Integer createOrder(OrderRequest request) {
@@ -35,7 +38,7 @@ public class OrderServiceImpl implements OrderService {
         var user = this.userClient
                 .findUserById(request.userId())
                 .orElseThrow(() -> new CustomException("User to order product is not found"));
-        this.productClient.purchaseProucts(request.products());
+       var products = this.productClient.purchaseProucts(request.products());
 
         var order = this.orderRepository.save(mapper.toOrder(request));
 
@@ -48,6 +51,26 @@ public class OrderServiceImpl implements OrderService {
                             purchaseRequest.quantity()
                     ));
         }
-        return 0;
+
+        orderProducer.sendOrderConfirmation(
+                new OrderConfirmation(
+                        request.reference(),
+                        request.amount(),
+                        request.paymentMethod(),
+                        user,
+                        products
+                )
+        );
+        return order.getId();
+    }
+
+    @Override
+    public List<OrderResponse> findAll() {
+        return orderRepository.findAll().stream().map(mapper::fromOrder).collect(Collectors.toList());
+    }
+
+    @Override
+    public OrderResponse findById(Integer orderId) {
+        return orderRepository.findById(orderId).map(mapper::fromOrder).orElseThrow(()->new CustomException("No Order found with the given id"));
     }
 }
