@@ -1,5 +1,7 @@
-package com.appaces.ecommerce.dto;
+package com.appaces.ecommerce.service.kafka;
 
+import com.appaces.ecommerce.dto.PurchaseResponse;
+import com.appaces.ecommerce.dto.UserResponse;
 import com.appaces.ecommerce.enums.PaymentMethod;
 
 import java.math.BigDecimal;

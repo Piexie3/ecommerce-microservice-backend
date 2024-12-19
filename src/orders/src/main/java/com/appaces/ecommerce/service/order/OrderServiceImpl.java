@@ -3,8 +3,10 @@ package com.appaces.ecommerce.service.order;
 import com.appaces.ecommerce.dto.*;
 import com.appaces.ecommerce.models.OrderMapper;
 import com.appaces.ecommerce.repository.OrderRepository;
+import com.appaces.ecommerce.service.kafka.OrderConfirmation;
 import com.appaces.ecommerce.service.kafka.OrderProducer;
 import com.appaces.ecommerce.service.order.orderitems.OrderItemsService;
+import com.appaces.ecommerce.service.payment.PaymentClient;
 import com.appaces.ecommerce.service.product.ProductClient;
 import com.appaces.ecommerce.service.user.UserClient;
 import com.appaces.ecommerce.utils.exceptions.CustomException;
@@ -23,6 +25,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper mapper;
     private final OrderItemsService itemsService;
     private final OrderProducer orderProducer;
+    private final PaymentClient paymentClient;
 
     @Override
     public Integer createOrder(OrderRequest request) {
@@ -38,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
         var user = this.userClient
                 .findUserById(request.userId())
                 .orElseThrow(() -> new CustomException("User to order product is not found"));
-       var products = this.productClient.purchaseProucts(request.products());
+        var products = this.productClient.purchaseProucts(request.products());
 
         var order = this.orderRepository.save(mapper.toOrder(request));
 
@@ -51,6 +54,14 @@ public class OrderServiceImpl implements OrderService {
                             purchaseRequest.quantity()
                     ));
         }
+        var paymentRequest = new PaymentRequest(
+                request.amount(),
+                request.paymentMethod(),
+                request.id(),
+                request.reference(),
+                user
+        );
+        paymentClient.requestOrderPayment(paymentRequest);
 
         orderProducer.sendOrderConfirmation(
                 new OrderConfirmation(
@@ -71,6 +82,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse findById(Integer orderId) {
-        return orderRepository.findById(orderId).map(mapper::fromOrder).orElseThrow(()->new CustomException("No Order found with the given id"));
+        return orderRepository.findById(orderId).map(mapper::fromOrder).orElseThrow(() -> new CustomException("No Order found with the given id"));
     }
 }
