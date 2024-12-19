@@ -1,0 +1,33 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/users?authSource=admin
+
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: paymentGroup,orderGroup
+      auto-offset-reset: earliest
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.trusted.packages: '*'
+        spring.json.type.mapping: paymentConfirmation:com.appaces.ecommerce.service.kafka.PaymentNotificationRequest,orderConfirmation:com.appaces.ecommerce.service.kafka.OrderConfirmation
+  mail:
+    host: localhost
+    port: 1025
+    username: appaces
+    password: appacesPassword
+    properties:
+      mail:
+        smtp:
+          trust: '*'
+        auth: true
+        starttls:
+          enabled: true
+        connectiontimeout: 5000
+        timeout: 3000
+        writetimeout: 5000
+
+server:
+  port: 8040
