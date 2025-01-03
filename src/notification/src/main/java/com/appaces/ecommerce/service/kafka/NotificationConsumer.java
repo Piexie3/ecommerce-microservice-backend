@@ -29,7 +29,7 @@ public class NotificationConsumer {
 
     @KafkaListener(topics = "payment-topic")
     public void successPaymentNotification(PaymentConfirmation request) throws MessagingException {
-        log.info("Consuming the message from payment-topic: {}", request);
+//        log.info("Consuming the message from payment-topic: %s", request);
         repository.save(
                 Notification.builder()
                         .notificationType(PAYMENT_CONFIRMATION)
