@@ -17,7 +17,7 @@ public class UserController {
     private final UserService customerService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createUser(@RequestParam @Valid UserRequest request){
+    public ResponseEntity<String> createUser(@RequestBody @Valid UserRequest request){
         return ResponseEntity.ok(customerService.createUser(request));
     }
 
