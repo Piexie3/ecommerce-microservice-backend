@@ -1,15 +1,15 @@
 spring:
   config:
-    import: "classpath:keys.properties"
+    import: "optional:classpath:keys.properties"
   datasource:
-    url: ${db.url}
-    username: ${db.username}
-    password: ${db.password}
+    url: jdbc:postgresql://localhost:5432/ecommerceproduct
+    username: postgres
+    password: P13x13@domain
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true

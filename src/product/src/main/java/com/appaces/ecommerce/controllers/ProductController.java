@@ -1,10 +1,9 @@
 package com.appaces.ecommerce.controllers;
 
-import com.appaces.ecommerce.dto.ProductRequest;
-import com.appaces.ecommerce.dto.ProductResponse;
-import com.appaces.ecommerce.dto.PurchaseRequest;
-import com.appaces.ecommerce.dto.PurchaseResponse;
-import com.appaces.ecommerce.services.ProductService;
+import com.appaces.ecommerce.dto.*;
+import com.appaces.ecommerce.models.Category;
+import com.appaces.ecommerce.services.category.CategoryService;
+import com.appaces.ecommerce.services.product.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,8 @@ import java.util.List;
 @RequestMapping("${api.prefix}/products")
 @RequiredArgsConstructor
 public class ProductController {
-    private ProductService productService;
+    private final ProductService productService;
+    private final CategoryService categoryService;
 
     @PostMapping("/upload-product")
     public ResponseEntity<Integer> createProduct(@RequestBody @Valid ProductRequest request){
@@ -38,4 +38,14 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
+
+    @PostMapping("/create-category")
+    public ResponseEntity<Category> createCategory(@RequestBody CategoryRequest request){
+        return ResponseEntity.ok(categoryService.createCategory(request));
+    }
+
+    @GetMapping("/get-all-categories")
+    public ResponseEntity<List<Category>> getAllCategory(){
+        return ResponseEntity.ok(categoryService.getAllCategory());
+    }
 }
