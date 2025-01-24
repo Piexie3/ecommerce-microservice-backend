@@ -1,4 +1,4 @@
-package com.appaces.ecommerce.services;
+package com.appaces.ecommerce.services.product;
 
 import com.appaces.ecommerce.dto.ProductRequest;
 import com.appaces.ecommerce.dto.ProductResponse;
@@ -6,7 +6,9 @@ import com.appaces.ecommerce.dto.PurchaseResponse;
 import com.appaces.ecommerce.models.Category;
 import com.appaces.ecommerce.models.Product;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ProductMapper {
     public Product toProduct(ProductRequest request) {
         return Product.builder()

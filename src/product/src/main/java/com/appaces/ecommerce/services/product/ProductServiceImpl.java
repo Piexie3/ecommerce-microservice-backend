@@ -1,4 +1,4 @@
-package com.appaces.ecommerce.services;
+package com.appaces.ecommerce.services.product;
 
 import com.appaces.ecommerce.dto.*;
 import com.appaces.ecommerce.models.Product;
@@ -25,10 +25,10 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<PurchaseResponse> purchaseProduct(List<PurchaseRequest> request) {
-        var productIds = request.stream()
+        List<Integer> productIds = request.stream()
                 .map(PurchaseRequest::productId)
                 .toList();
-        var products = repository.findAllIdInOrderById(productIds);
+        var products = repository.findAllProductsByIdIn(productIds);
         if (productIds.size() != products.size()){
             throw new CustomException("One or more products doesn't exists");
         }
